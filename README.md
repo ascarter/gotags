@@ -23,14 +23,13 @@ Or using package manager `brew` on OS X
       -R=false: recurse into directories in the file list.
       -exclude=[]: exclude files and directories matching 'pattern'. May be called multiple times.
       -exclude-private=false: exclude private symbols.
-      -f="": write output to specified file. If file is "-", output is written to standard out.
+      -f="tags": write output to specified file. If file is "-", output is written to standard out.
       -fields="": include selected extension fields (only +l).
       -list-languages=false: list supported languages.
       -silent=false: do not produce any output on error.
       -sort=true: sort tags.
       -tag-relative=false: file paths should be relative to the directory containing the tag file.
       -v=false: print version.
-
 
 ## Vim [Tagbar][] configuration
 

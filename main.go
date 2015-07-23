@@ -53,18 +53,15 @@ var flags = flag.NewFlagSet(os.Args[0], flag.ContinueOnError)
 func init() {
 	flags.BoolVar(&printVersion, "v", false, "print version.")
 	flags.StringVar(&inputFile, "L", "", `source file names are read from the specified file. If file is "-", input is read from standard in.`)
-	flags.StringVar(&outputFile, "f", "", `write output to specified file. If file is "-", output is written to standard out.`)
+	flags.StringVar(&outputFile, "f", "tags", `write output to specified file. If file is "-", output is written to standard out.`)
 	flags.BoolVar(&recurse, "R", false, "recurse into directories in the file list.")
 	flags.BoolVar(&sortOutput, "sort", true, "sort tags.")
 	flags.BoolVar(&silent, "silent", false, "do not produce any output on error.")
 	flags.BoolVar(&relative, "tag-relative", false, "file paths should be relative to the directory containing the tag file.")
 	flags.BoolVar(&listLangs, "list-languages", false, "list supported languages.")
 	flags.StringVar(&fields, "fields", "", "include selected extension fields (only +l).")
-<<<<<<< HEAD
 	flags.Var(&excludePatterns, "exclude", "exclude files and directories matching 'pattern'. May be called multiple times.")
-=======
 	flags.BoolVar(&excludePrivate, "exclude-private", false, "exclude private symbols.")
->>>>>>> ascarter-excludeprivate
 
 	flags.Usage = func() {
 		fmt.Fprintf(os.Stderr, "gotags version %s\n\n", Version)
@@ -211,8 +208,16 @@ func main() {
 		fmt.Println("Go")
 		return
 	}
+	
+	var sources []string
+	sources = append(sources, flags.Args()...)
+	if len(sources) == 0 && recurse {
+		// Default to current directory if no arguments provided
+		// and recurse set
+		sources = append(sources, ".")
+	}
 
-	files, err := getFileNames(flags.Args(), recurse, excludePatterns)
+	files, err := getFileNames(sources, recurse, excludePatterns)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "cannot get specified files\n\n")
 		flags.Usage()
