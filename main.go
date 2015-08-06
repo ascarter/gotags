@@ -43,6 +43,7 @@ var (
 	listLangs       bool
 	fields          string
 	excludePatterns patternList
+	excludePrivate  bool
 )
 
 // ignore unknown flags
@@ -59,7 +60,11 @@ func init() {
 	flags.BoolVar(&relative, "tag-relative", false, "file paths should be relative to the directory containing the tag file.")
 	flags.BoolVar(&listLangs, "list-languages", false, "list supported languages.")
 	flags.StringVar(&fields, "fields", "", "include selected extension fields (only +l).")
+<<<<<<< HEAD
 	flags.Var(&excludePatterns, "exclude", "exclude files and directories matching 'pattern'. May be called multiple times.")
+=======
+	flags.BoolVar(&excludePrivate, "exclude-private", false, "exclude private symbols.")
+>>>>>>> ascarter-excludeprivate
 
 	flags.Usage = func() {
 		fmt.Fprintf(os.Stderr, "gotags version %s\n\n", Version)
@@ -240,7 +245,7 @@ func main() {
 
 	tags := []Tag{}
 	for _, file := range files {
-		ts, err := Parse(file, relative, basedir)
+		ts, err := Parse(file, relative, basedir, excludePrivate)
 		if err != nil {
 			if !silent {
 				fmt.Fprintf(os.Stderr, "parse error: %s\n\n", err)
